@@ -5,6 +5,12 @@ import config from "../../app/config/index.js";
 const studentSchema = new Schema(
     {
         id: { type: String, unique: true },
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: [true, "user id is required"],
+            unique: true,
+        },
         password: { type: String, required: true },
         name: {
             firstName: { type: String, required: true },
@@ -36,11 +42,6 @@ const studentSchema = new Schema(
             motherEmail: { type: String, required: true },
         },
         profileImage: { type: String, required: true },
-        isActive: {
-            type: String,
-            enum: ["Active", "Inactive"],
-            default: "Active",
-        },
         isDeleted: {
             type: Boolean,
             default: false,

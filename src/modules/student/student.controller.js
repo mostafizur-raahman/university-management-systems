@@ -46,7 +46,6 @@ const deleteStudent = async (req, res) => {
     }
 };
 export const StudentController = {
-    createStudent,
     getAllStudent,
     getSingleStudent,
     deleteStudent,

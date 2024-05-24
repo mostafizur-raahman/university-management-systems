@@ -78,7 +78,6 @@ const studentValidationSchema = Joi.object({
     profileImage: Joi.string().required().messages({
         "any.required": "Profile image is required.",
     }),
-    isActive: Joi.string().valid("Active", "Inactive").default("Active"),
     isDeleted: Joi.boolean().default(false),
 }).messages({
     "object.base": "Invalid input.", // If the input is not an object

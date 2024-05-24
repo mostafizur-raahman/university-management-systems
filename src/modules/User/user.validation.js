@@ -6,7 +6,7 @@ const userValidationSchema = Joi.object({
         "string.empty": "ID is required.",
         "any.required": "ID is a required field.",
     }),
-    password: Joi.string().default("GUB123"),
+    password: Joi.string().min(4),
     needPasswordChange: Joi.boolean().default(true),
     role: Joi.string()
         .valid("student", "faculty", "admin")
