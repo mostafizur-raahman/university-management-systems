@@ -2,7 +2,7 @@ import { Schema, model, connect } from "mongoose";
 
 const studentSchema = new Schema(
     {
-        id: { type: String },
+        id: { type: String, unique: true },
         name: {
             firstName: { type: String, required: true },
             middleName: { type: String },
@@ -47,6 +47,11 @@ const studentSchema = new Schema(
         timestamps: true,
     }
 );
+
+studentSchema.methods.isUserExist = async function (id) {
+    const result = await Student.findOne({ id: id });
+    return result;
+};
 
 const Student = model("Student", studentSchema);
 

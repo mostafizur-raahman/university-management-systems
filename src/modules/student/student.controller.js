@@ -1,11 +1,22 @@
 import { StudentServices } from "./student.service.js";
+import studentValidationSchema from "./student.validation.js";
 
 const createStudent = async (req, res) => {
     try {
         const student = req.body;
 
+        //  validation schema
+        const { error, value } = studentValidationSchema.validate(student);
+
+        if (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message,
+            });
+        }
+
         // will call sevice method
-        const result = await StudentServices.createStudentIntoDB(student);
+        const result = await StudentServices.createStudentIntoDB(value);
 
         res.status(200).json({
             success: true,
@@ -13,7 +24,10 @@ const createStudent = async (req, res) => {
             data: result,
         });
     } catch (error) {
-        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
     }
 };
 
