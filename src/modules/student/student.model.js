@@ -1,8 +1,11 @@
 import { Schema, model, connect } from "mongoose";
+import bcrypt from "bcrypt";
+import config from "../../app/config/index.js";
 
 const studentSchema = new Schema(
     {
         id: { type: String, unique: true },
+        password: { type: String, required: true },
         name: {
             firstName: { type: String, required: true },
             middleName: { type: String },
@@ -47,6 +50,37 @@ const studentSchema = new Schema(
         timestamps: true,
     }
 );
+
+// pre save middleware
+studentSchema.pre("save", async function (next) {
+    const user = this;
+    user.password = await bcrypt.hash(
+        user.password,
+        parseInt(config.bcrypt_SALT_ROUNDS)
+    );
+    next();
+});
+
+// post save middleware
+studentSchema.post("save", function (doc, next) {
+    doc.password = "";
+    next();
+});
+
+studentSchema.pre("find", async function (next) {
+    this.where({ isDeleted: false });
+    next();
+});
+
+studentSchema.pre("findOne", async function (next) {
+    this.where({ isDeleted: false });
+    next();
+});
+
+studentSchema.pre("aggregate", async function (next) {
+    this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+    next();
+});
 
 // static properties
 studentSchema.statics.isUserExist = async function (id) {
