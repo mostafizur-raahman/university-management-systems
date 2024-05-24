@@ -48,10 +48,17 @@ const studentSchema = new Schema(
     }
 );
 
-studentSchema.methods.isUserExist = async function (id) {
+// static properties
+studentSchema.statics.isUserExist = async function (id) {
     const result = await Student.findOne({ id: id });
     return result;
 };
+
+// instance properties
+// studentSchema.methods.isUserExist = async function (id) {
+//     const result = await Student.findOne({ id: id });
+//     return result;
+// };
 
 const Student = model("Student", studentSchema);
 
