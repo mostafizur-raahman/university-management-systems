@@ -1,6 +1,7 @@
+import sendResponse from "../../app/utils/sendResponse.js";
 import { StudentServices } from "./student.service.js";
 
-const getAllStudent = async (req, res) => {
+const getAllStudent = async (req, res, next) => {
     try {
         const result = await StudentServices.getAllStudentFromDB();
         console.log("all");
@@ -10,39 +11,41 @@ const getAllStudent = async (req, res) => {
             data: result,
         });
     } catch (error) {
-        console.log(error);
+        next(error);
     }
 };
 
-const getSingleStudent = async (req, res) => {
+const getSingleStudent = async (req, res, next) => {
     try {
         const id = req.query.id;
         console.log("Student", id);
 
         const result = await StudentServices.getSingleStudentFromDB(id);
 
-        res.status(200).json({
+        sendResponse(res, {
+            statusCode: 200,
             success: true,
             message: "Student fetched successfully",
             data: result,
         });
     } catch (error) {
-        console.log(error);
+        next(error);
     }
 };
 
-const deleteStudent = async (req, res) => {
+const deleteStudent = async (req, res, next) => {
     try {
         const id = req.query.id;
 
         await StudentServices.deleteStudentFromDB(id);
 
-        res.status(200).json({
+        sendResponse(res, {
+            statusCode: 200,
             success: true,
-            message: "Student deleted successfully",
+            message: "Student delete successfully",
         });
     } catch (error) {
-        console.log(error);
+        next(error);
     }
 };
 export const StudentController = {

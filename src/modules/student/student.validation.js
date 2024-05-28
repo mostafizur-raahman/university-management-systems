@@ -5,10 +5,6 @@ const studentValidationSchema = Joi.object({
         "any.required": "ID is required.",
         "string.empty": "ID cannot be empty.",
     }),
-    password: Joi.string().min(5).required().messages({
-        "string.min": "Password must be at least {#limit} characters long.",
-        "any.required": "Password is required.",
-    }),
     name: Joi.object({
         firstName: Joi.string().min(2).required().messages({
             "string.min":

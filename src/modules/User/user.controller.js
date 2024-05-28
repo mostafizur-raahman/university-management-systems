@@ -1,7 +1,8 @@
+import sendResponse from "../../app/utils/sendResponse.js";
 import studentValidationSchema from "../student/student.validation.js";
 import { UserServices } from "./user.service.js";
 
-const createStudent = async (req, res) => {
+const createStudent = async (req, res, next) => {
     try {
         const { password, student } = req.body;
 
@@ -18,16 +19,14 @@ const createStudent = async (req, res) => {
         // will call sevice method
         const result = await UserServices.createStudentIntoDB(password, value);
 
-        res.status(200).json({
+        sendResponse(res, {
+            statusCode: 201,
             success: true,
             message: "Student created successfully",
             data: result,
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message,
-        });
+        next(error);
     }
 };
 
