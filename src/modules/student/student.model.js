@@ -1,19 +1,21 @@
-import { Schema, model, connect } from "mongoose";
+import { Schema, model } from "mongoose";
+import bcrypt from "bcrypt";
+import config from "../../app/config/index.js";
 
 const studentSchema = new Schema(
     {
         id: { type: String, unique: true },
-        user: {
-            type: Schema.Types.ObjectId,
-            ref: "User",
-            required: [true, "user id is required"],
-            unique: true,
-        },
         name: {
             firstName: { type: String, required: true },
             middleName: { type: String },
             lastName: { type: String, required: true },
         },
+        role: {
+            type: Schema.Types.ObjectId,
+            ref: "Role",
+            required: [true, "role id is required"],
+        },
+        password: { type: String, required: true },
         gender: {
             type: String,
             enum: ["Male", "Female"],
@@ -49,6 +51,22 @@ const studentSchema = new Schema(
     }
 );
 
+studentSchema.pre("save", async function (next) {
+    const user = this;
+    user.password = await bcrypt.hash(
+        user.password,
+        Number(config.bcrypt_SALT_ROUNDS)
+    );
+
+    next();
+});
+
+// post save middleware
+studentSchema.post("save", function (doc, next) {
+    doc.password = "";
+    next();
+});
+
 studentSchema.pre("find", async function (next) {
     this.where({ isDeleted: false });
     next();
@@ -70,7 +88,7 @@ studentSchema.statics.isUserExist = async function (id) {
     return result;
 };
 
-// instance properties
+// // instance properties
 // studentSchema.methods.isUserExist = async function (id) {
 //     const result = await Student.findOne({ id: id });
 //     return result;

@@ -18,6 +18,11 @@ const studentValidationSchema = Joi.object({
             "any.required": "Last name is required.",
         }),
     }).required(),
+    role: Joi.string().required(),
+    password: Joi.string().min(4).required().messages({
+        "any.required": "Password is required.",
+        "string.empty": "Password cannot be empty.",
+    }),
     gender: Joi.string().valid("Male", "Female").required().messages({
         "any.only": "Gender must be either Male or Female.",
         "any.required": "Gender is required.",
