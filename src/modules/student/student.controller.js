@@ -65,9 +65,23 @@ const deleteStudent = catchAsync(async (req, res, next) => {
         message: "Student delete successfully",
     });
 });
+
+const login = catchAsync(async (req, res, next) => {
+    const { email, password } = req.body;
+
+    const result = await StudentServices.loginStudent(email, password);
+
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Login successfully",
+        data: result,
+    });
+});
 export const StudentController = {
     createStudent,
     getAllStudent,
     getSingleStudent,
     deleteStudent,
+    login,
 };

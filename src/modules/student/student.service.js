@@ -1,4 +1,7 @@
 import Student from "./student.model.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import config from "../../app/config/index.js";
 
 const createStudentIntoDB = async (student) => {
     // static metthod
@@ -70,9 +73,28 @@ const deleteStudentFromDB = async (id) => {
     return result;
 };
 
+const loginStudent = async (email, password) => {
+    const user = await Student.findOne({ email: email });
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+        throw new Error("Invalid password");
+    }
+
+    const token = jwt.sign({ id: user._id }, config.jwt_secret_key, {
+        expiresIn: config.jwt_expires_in,
+    });
+
+    return token;
+};
 export const StudentServices = {
     createStudentIntoDB,
     getAllStudentFromDB,
     getSingleStudentFromDB,
     deleteStudentFromDB,
+    loginStudent,
 };
