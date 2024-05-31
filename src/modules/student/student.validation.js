@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-const studentValidationSchema = Joi.object({
+const userValidationSchema = Joi.object({
     id: Joi.string().required().messages({
         "any.required": "ID is required.",
         "string.empty": "ID cannot be empty.",
@@ -85,4 +85,4 @@ const studentValidationSchema = Joi.object({
     "any.unknown": "Invalid input.", // If there are unknown keys in the object
 });
 
-export default studentValidationSchema;
+export default userValidationSchema;

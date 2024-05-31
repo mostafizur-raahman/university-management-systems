@@ -1,12 +1,12 @@
 import catchAsync from "../../app/utils/catchAsync.js";
 import sendResponse from "../../app/utils/sendResponse.js";
-import { StudentServices } from "./student.service.js";
-import studentValidationSchema from "./student.validation.js";
+import { UserServices } from "./student.service.js";
+import userValidationSchema from "./student.validation.js";
 
-const createStudent = async (req, res, next) => {
+const createUser = async (req, res, next) => {
     try {
         //  validation schema
-        const { error, value } = studentValidationSchema.validate(req.body);
+        const { error, value } = userValidationSchema.validate(req.body);
 
         if (error) {
             return res.status(400).json({
@@ -16,7 +16,7 @@ const createStudent = async (req, res, next) => {
         }
 
         // will call sevice method
-        const result = await StudentServices.createStudentIntoDB(value);
+        const result = await UserServices.createUserInDB(value);
 
         sendResponse(res, {
             statusCode: 201,
@@ -29,8 +29,8 @@ const createStudent = async (req, res, next) => {
     }
 };
 
-const getAllStudent = catchAsync(async (req, res, next) => {
-    const result = await StudentServices.getAllStudentFromDB();
+const getAllUser = catchAsync(async (req, res, next) => {
+    const result = await UserServices.getAllUserfromDb();
 
     res.status(200).json({
         success: true,
@@ -39,11 +39,11 @@ const getAllStudent = catchAsync(async (req, res, next) => {
     });
 });
 
-const getSingleStudent = catchAsync(async (req, res, next) => {
+const getSingleUser = catchAsync(async (req, res, next) => {
     const id = req.query.id;
     console.log("Student", id);
 
-    const result = await StudentServices.getSingleStudentFromDB(id);
+    const result = await UserServices.getSingleUserFromDB(id);
     console.log("Student", result);
 
     sendResponse(res, {
@@ -54,10 +54,10 @@ const getSingleStudent = catchAsync(async (req, res, next) => {
     });
 });
 
-const deleteStudent = catchAsync(async (req, res, next) => {
+const deleteUser = catchAsync(async (req, res, next) => {
     const id = req.query.id;
 
-    await StudentServices.deleteStudentFromDB(id);
+    await UserServices.deleteuserfromDB(id);
 
     sendResponse(res, {
         statusCode: 200,
@@ -69,7 +69,7 @@ const deleteStudent = catchAsync(async (req, res, next) => {
 const login = catchAsync(async (req, res, next) => {
     const { email, password } = req.body;
 
-    const result = await StudentServices.loginStudent(email, password);
+    const result = await UserServices.loginUser(email, password);
 
     sendResponse(res, {
         statusCode: 200,
@@ -79,9 +79,9 @@ const login = catchAsync(async (req, res, next) => {
     });
 });
 export const StudentController = {
-    createStudent,
-    getAllStudent,
-    getSingleStudent,
-    deleteStudent,
+    createUser,
+    getAllUser,
+    getSingleUser,
+    deleteUser,
     login,
 };

@@ -4,11 +4,11 @@ import auth from "../../app/middleware/auth.js";
 
 const router = express.Router();
 
-router.post("/create-student", StudentController.createStudent);
+router.post("/create-user", StudentController.createUser);
 router.post("/login", StudentController.login);
 
-router.get("/all", auth, StudentController.getAllStudent);
-router.get("/single", StudentController.getSingleStudent);
-router.delete("/delete", StudentController.deleteStudent);
+router.get("/all", auth, StudentController.getAllUser);
+router.get("/single", StudentController.getSingleUser);
+router.delete("/delete", StudentController.deleteUser);
 
 export const StudentRoutes = router;

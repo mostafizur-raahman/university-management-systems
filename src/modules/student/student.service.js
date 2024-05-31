@@ -1,9 +1,9 @@
-import Student from "./student.model.js";
+import User from "./student.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import config from "../../app/config/index.js";
 
-const createStudentIntoDB = async (student) => {
+const createUserInDB = async (student) => {
     // static metthod
     const existingStudent = await Student.isUserExist(student.id);
     if (existingStudent) {
@@ -11,7 +11,7 @@ const createStudentIntoDB = async (student) => {
     }
 
     //create user
-    const newUser = await Student.create(student);
+    const newUser = await User.create(student);
 
     return newUser;
     // instance metthod
@@ -23,8 +23,8 @@ const createStudentIntoDB = async (student) => {
     // return res;
 };
 
-const getAllStudentFromDB = async () => {
-    const result = await Student.aggregate([
+const getAllUserfromDb = async () => {
+    const result = await User.aggregate([
         {
             $lookup: {
                 from: "roles",
@@ -56,13 +56,41 @@ const getAllStudentFromDB = async () => {
     return result;
 };
 
-const getSingleStudentFromDB = async (id) => {
-    const result = await Student.findOne({ _id: id });
+const getSingleUserFromDB = async (id) => {
+    // check id isexits and aggreate with role
+    const result = await User.aggregate([
+        {
+            $lookup: {
+                from: "roles",
+                localField: "role",
+                foreignField: "_id",
+                as: "role",
+            },
+        },
+        {
+            $unwind: {
+                path: "$role",
+            },
+        },
+        {
+            $addFields: {
+                role: "$role.name",
+            },
+        },
+        {
+            $project: {
+                _id: 1,
+                name: 1,
+                email: 1,
+                role: 1,
+            },
+        },
+    ]);
 
     return result;
 };
 
-const deleteStudentFromDB = async (id) => {
+const deleteuserfromDB = async (id) => {
     const result = await Student.updateOne(
         { _id: id },
         {
@@ -73,7 +101,7 @@ const deleteStudentFromDB = async (id) => {
     return result;
 };
 
-const loginStudent = async (email, password) => {
+const loginUser = async (email, password) => {
     const user = await Student.findOne({ email: email });
 
     if (!user) {
@@ -91,10 +119,10 @@ const loginStudent = async (email, password) => {
 
     return token;
 };
-export const StudentServices = {
-    createStudentIntoDB,
-    getAllStudentFromDB,
-    getSingleStudentFromDB,
-    deleteStudentFromDB,
-    loginStudent,
+export const UserServices = {
+    createUserInDB,
+    getAllUserfromDb,
+    getSingleUserFromDB,
+    deleteuserfromDB,
+    loginUser,
 };

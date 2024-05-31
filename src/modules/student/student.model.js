@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
 import config from "../../app/config/index.js";
 
-const studentSchema = new Schema(
+const userSchema = new Schema(
     {
         id: { type: String, unique: true },
         name: {
@@ -51,7 +51,7 @@ const studentSchema = new Schema(
     }
 );
 
-studentSchema.pre("save", async function (next) {
+userSchema.pre("save", async function (next) {
     const user = this;
     user.password = await bcrypt.hash(
         user.password,
@@ -62,28 +62,28 @@ studentSchema.pre("save", async function (next) {
 });
 
 // post save middleware
-studentSchema.post("save", function (doc, next) {
+userSchema.post("save", function (doc, next) {
     doc.password = "";
     next();
 });
 
-studentSchema.pre("find", async function (next) {
+userSchema.pre("find", async function (next) {
     this.where({ isDeleted: false });
     next();
 });
 
-studentSchema.pre("findOne", async function (next) {
+userSchema.pre("findOne", async function (next) {
     this.where({ isDeleted: false });
     next();
 });
 
-studentSchema.pre("aggregate", async function (next) {
+userSchema.pre("aggregate", async function (next) {
     this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
     next();
 });
 
 // static properties
-studentSchema.statics.isUserExist = async function (id) {
+userSchema.statics.isUserExist = async function (id) {
     const result = await Student.findOne({ id: id });
     return result;
 };
@@ -94,6 +94,6 @@ studentSchema.statics.isUserExist = async function (id) {
 //     return result;
 // };
 
-const Student = model("Student", studentSchema);
+const User = model("User", userSchema);
 
-export default Student;
+export default User;

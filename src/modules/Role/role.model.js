@@ -4,7 +4,7 @@ const roleSchema = new Schema(
     {
         name: {
             type: String,
-            enum: ["student", "faculty", "admin"],
+            enum: ["customer", "merchent", "admin"],
             required: true,
         },
         isDeleted: {
