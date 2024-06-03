@@ -8,7 +8,9 @@ async function connect() {
         console.log("MongoDb connected");
 
         app.listen(config.port, () => {
-            console.log(`UMS is listening on port ${config.port}`);
+            console.log(
+                `${config.app_name} is listening on port ${config.port}`
+            );
         });
     } catch (error) {
         console.log(error);

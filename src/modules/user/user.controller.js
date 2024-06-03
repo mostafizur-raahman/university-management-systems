@@ -1,7 +1,7 @@
 import catchAsync from "../../app/utils/catchAsync.js";
 import sendResponse from "../../app/utils/sendResponse.js";
-import { UserServices } from "./student.service.js";
-import userValidationSchema from "./student.validation.js";
+import { UserServices } from "./user.service.js";
+import userValidationSchema from "./user.validation.js";
 
 const createUser = async (req, res, next) => {
     try {
@@ -78,7 +78,7 @@ const login = catchAsync(async (req, res, next) => {
         data: result,
     });
 });
-export const StudentController = {
+export const UserController = {
     createUser,
     getAllUser,
     getSingleUser,

@@ -1,11 +1,11 @@
-import User from "./student.model.js";
+import User from "./user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import config from "../../app/config/index.js";
 
 const createUserInDB = async (student) => {
     // static metthod
-    const existingStudent = await Student.isUserExist(student.id);
+    const existingStudent = await User.isUserExist(student.id);
     if (existingStudent) {
         throw new Error(`User already exists`);
     }
@@ -91,7 +91,7 @@ const getSingleUserFromDB = async (id) => {
 };
 
 const deleteuserfromDB = async (id) => {
-    const result = await Student.updateOne(
+    const result = await User.updateOne(
         { _id: id },
         {
             isDeleted: true,
@@ -102,7 +102,7 @@ const deleteuserfromDB = async (id) => {
 };
 
 const loginUser = async (email, password) => {
-    const user = await Student.findOne({ email: email });
+    const user = await User.findOne({ email: email });
 
     if (!user) {
         throw new Error("User not found");
